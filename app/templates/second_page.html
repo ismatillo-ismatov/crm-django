@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+        <h1>Hello World</h1>
+    <p>this is second page</p>
+    {% for p in leads %}
+        <ol>
+            <li>{{p.last_name}}</li>
+        </ol>
+    {% endfor %}
+
+{% endblock content %}
