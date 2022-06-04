@@ -4,8 +4,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.views import generic
+from agents.mixins import OrganisorAndLoginMixin
 from .models import *
-from .form import LeadForm,LeadModelForm,CustomCreateForm
+from .form import LeadForm,LeadModelForm,CustomCreateForm, AssignAgentForm
 
 
 class SignUp(generic.CreateView):
@@ -28,8 +29,28 @@ def leanding_page(request):
 
 class LeadListView(LoginRequiredMixin,generic.ListView):
     template_name = "leads/lead_list.html"
-    queryset = Lead.objects.all()
     context_object_name = "leads"
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_organisor:
+            queryset = Lead.objects.filter(organisation=user.userprofile, agent__isnull=False)
+        else:
+            queryset = Lead.objects.filter(organisation=user.agent.organisation, agent__isnull=False)
+            queryset = queryset.filter(agent__user=user)
+        return queryset
+    def get_context_data(self, **kwargs):
+        context = super(LeadListView, self).get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_organisor:
+            queryset = Lead.objects.filter(
+                organisation=user.userprofile,
+                agent__isnull=True
+            )
+            context.update({
+                "unassigned_leads":queryset
+            })
+            return context
 
 def lead_list(request):
     leads = Lead.objects.all()
@@ -55,7 +76,7 @@ def lead_detail(request,pk):
 
 class LeadCreateView(LoginRequiredMixin,generic.CreateView):
     template_name = "leads/lead_create.html"
-    form_class =  LeadModelForm
+    form_class = LeadModelForm
     def get_success_url(self):
         return reverse("app:list")
 
@@ -85,10 +106,9 @@ def create_lead(request):
 class LeadUpdateView(LoginRequiredMixin,generic.UpdateView):
     template_name = "leads/lead_update.html"
     form_class = LeadModelForm
-    queryset = Lead.objects.all()
-    def get_success_url(self):
-        return reverse('app:update')
-
+    def get_queryset(self):
+        user = self.request.user
+        return Lead.objects.filter(organisation=user.userprofile)
 def lead_update(request,pk):
     lead = Lead.objects.get(id=pk)
     form = LeadModelForm(instance=lead)
@@ -108,9 +128,9 @@ def lead_update(request,pk):
 class LeadDeleteView(LoginRequiredMixin,generic.DeleteView):
     template_name = "leads/lead_delete.html"
     queryset = Lead.objects.all()
-    def get_success_url(self):
-        return reverse("app:list")
-
+    def get_queryset(self):
+        user = self.request.user
+        return Lead.objects.filter(organisation=user.userprofile)
 
 
 
@@ -119,22 +139,19 @@ def lead_delete(request, pk):
     lead.delete()
     return redirect("/app")
 
-# def lead_update(request,pk):
-#     lead = Lead.objects.get(id=pk)
-#     form = LeadForm()
-#     if request.method == "POST":
-#         form = LeadForm(request.POST)
-#         if form.is_valid():
-#             first_name = form.cleaned_data['first_name']
-#             last_name = form.cleaned_data['last_name']
-#             age = form.cleaned_data['age']
-#             lead.first_name = first_name
-#             lead.last_name = last_name
-#             lead.age = age
-#             lead.save()
-#             return redirect("/leads")
-#     context = {
-#         "form":form,
-#         "lead":lead
-#     }
-#     return render(request,"leads/lead_update.html",context)
+class AssignAgentView(OrganisorAndLoginMixin,generic.FormView):
+    template_name = "leads/assign_agent.html"
+    form_class = AssignAgentForm
+
+    def get_form_kwargs(self,**kwargs):
+        kwargs = super(AssignAgentView, self).get_form_kwargs(**kwargs)
+        kwargs.update( {
+            "request": self.request
+        })
+        return kwargs
+    def get_success_url(self):
+        return reverse("leads:list")
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super(AssignAgentView, self).form_valid(form)

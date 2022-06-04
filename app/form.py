@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm,UsernameField
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import Lead
+from .models import Lead, Agent
 
 User = get_user_model()
 
@@ -26,3 +26,13 @@ class CustomCreateForm(UserCreationForm):
         model = User
         fields = ("username",)
         fields_classes = {"username":UsernameField}
+class AssignAgentForm(forms.Form):
+    agent = forms.ModelChoiceField(queryset=Agent.objects.none())
+
+    def __init__(self,*args,**kwargs):
+        request = kwargs.pop("request")
+        agents = Agent.objects.filter(organisation=request.user.userprofile)
+        super(AssignAgentForm, self).__init__(*args,**kwargs)
+        self.fields["agent"].queryset = agents
+
+
