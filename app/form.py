@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm,UsernameField
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import Lead, Agent
+from .models import Lead, Agent, Category
 
 User = get_user_model()
 
@@ -14,6 +14,11 @@ class LeadModelForm(forms.ModelForm):
             "age",
             "agent",
         )
+
+    def clean_first_name(self):
+        data = self.cleaned_data['first_name']
+
+        return data
 
 
 class LeadForm(forms.Form):
@@ -36,3 +41,9 @@ class AssignAgentForm(forms.Form):
         self.fields["agent"].queryset = agents
 
 
+class LeadCategoryUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Lead
+        fields = (
+            'category',
+        )

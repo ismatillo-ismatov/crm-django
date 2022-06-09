@@ -1,11 +1,16 @@
 {% extends "base.html" %}
+{% load tailwind_filters %}
 {% block content %}
+<div class="max-w-lg mx-auto">
     <a href="{% url 'app:list' %}">go leads</a>
-    <h1>Create new lead</h1>
-        <form method="post">
+    <div class="py-5 border-t border-gray-200">
+    <h1 class="text-4xl text-gray-800">Create new lead</h1>
+    </div>
+        <form method="post" class="mt-5">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit</button>
+            {{ form|crispy }}
+    <button type="submit" class="w-full text-white bg-blue-500 hover:bg-blue-600 px-3 py-2">Submit</button>
         </form>
+</div>
 
 {% endblock content %}
