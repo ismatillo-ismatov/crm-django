@@ -8,6 +8,9 @@ verify_ssl = true
 [packages]
 django = "*"
 django-crispy-forms = "*"
+psycopg2 = "*"
+psycopg2-binary = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.9"

@@ -75,13 +75,21 @@ def lead_detail(request,pk):
     return render(request,'leads/lead_detail.html',context)
 
 
-class LeadCreateView(LoginRequiredMixin,generic.CreateView):
+class LeadCreateView(OrganisorAndLoginMixin,generic.CreateView):
     template_name = "leads/lead_create.html"
     form_class = LeadModelForm
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     return Lead.objects.filter(organisation=user.userprofile)
+
     def get_success_url(self):
         return reverse("app:list")
 
     def form_valid(self, form):
+        lead = form.save(commit=False)
+        lead.organisation = self.request.user.userprofile
+        lead.save()
         send_mail(
             subject='created lead',
             message='go to new lead',
@@ -105,12 +113,16 @@ def create_lead(request):
     return render(request,"leads/lead_create.html",context)
 
 
-class LeadUpdateView(LoginRequiredMixin,generic.UpdateView):
+class LeadUpdateView(OrganisorAndLoginMixin,generic.UpdateView):
     template_name = "leads/lead_update.html"
     form_class = LeadModelForm
     def get_queryset(self):
         user = self.request.user
         return Lead.objects.filter(organisation=user.userprofile)
+    def form_valid(self, form):
+        form.save()
+        messages.info(self.request, "update lead")
+        return super(LeadUpdateView,self).form_valid(form)
 def lead_update(request,pk):
     lead = Lead.objects.get(id=pk)
     form = LeadModelForm(instance=lead)
