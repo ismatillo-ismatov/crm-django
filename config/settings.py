@@ -164,4 +164,3 @@ LOGIN_URL = 'login/'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = 'tailwind'
-EMAIL_HOST = ""

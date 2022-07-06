@@ -1,17 +1,10 @@
 {% extends "base.html" %}
 {% load tailwind_filters %}
 {% block content %}
-    <a href="{% url 'app:list' %}">go leads</a>
-    <h1>Assign an agent to this lead</h1>
-<!--        <form method="post">-->
-<!--            {% csrf_token %}-->
-<!--            {{ form|crispy }}-->
-<!--            <button type="submit">Submit</button>-->
-<!--        </form>-->
 <div class="max-w-lg mx-auto">
-    <a href="{% url 'app:list' %}">go leads</a>
+    <a href="{% url 'app:category-list' %}">go leads</a>
     <div class="py-5 border-t border-gray-200">
-    <h1 class="text-4xl text-gray-800">Create new lead</h1>
+    <h1 class="text-4xl text-gray-800">Create new category</h1>
     </div>
         <form method="post" class="mt-5">
             {% csrf_token %}

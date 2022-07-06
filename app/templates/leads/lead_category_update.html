@@ -8,14 +8,14 @@
         <h2 class="text-sm title-font text-gray-500 tracking-widest">Lead</h2>
         <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ lead.first_name }} {{ lead.last_name }}</h1>
         <div class="flex mb-4">
-          <a href="{% url 'app:detail' category.pk %}" class="flex-grow  border-b-2 border-gray-300 py-2 text-lg px-1">
+          <a href="{% url 'app:detail' lead.pk %}" class="flex-grow  border-b-2 border-gray-300 py-2 text-lg px-1">
               Overview
           </a>
 
-          <a href="{% url 'app:category-update' category.pk %}"  class="flex-grow text-indigo-500 border-b-2 border-gray-300 py-2 text-lg px-1">
+          <a href="{% url 'app:lead_category-update' lead.pk %}"  class="flex-grow text-indigo-500 border-b-2 border-gray-300 py-2 text-lg px-1">
               Category
           </a>
-          <a href="{% url 'app:update' category.pk %}" class="flex-grow  border-b-2 border-gray-300 py-2 text-lg px-1">
+          <a href="{% url 'app:update' lead.pk %}" class="flex-grow  border-b-2 border-gray-300 py-2 text-lg px-1">
               Update  Details
           </a>
         </div>

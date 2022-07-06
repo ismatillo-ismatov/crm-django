@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.views import generic
 from agents.mixins import OrganisorAndLoginMixin
 from .models import *
-from .form import LeadForm,LeadModelForm,CustomCreateForm, AssignAgentForm,LeadCategoryUpdateForm
+from .form import LeadForm,LeadModelForm,CustomCreateForm, AssignAgentForm,LeadCategoryUpdateForm,CategoryModelForm
 
 
 class SignUp(generic.CreateView):
@@ -66,13 +66,13 @@ class LeadDetailView(LoginRequiredMixin,generic.DetailView):
     queryset = Lead.objects.all()
     context_object_name = "leads"
 
-def lead_detail(request,pk):
-    lead = Lead.objects.get(id=pk)
-    context = {
-        "lead":lead
-    }
+# def lead_detail(request,pk):
+#     lead = Lead.objects.get(id=pk)
+#     context = {
+#         "lead":lead
+#     }
 
-    return render(request,'leads/lead_detail.html',context)
+    # return render(request,'leads/lead_detail.html',context)
 
 
 class LeadCreateView(OrganisorAndLoginMixin,generic.CreateView):
@@ -119,10 +119,16 @@ class LeadUpdateView(OrganisorAndLoginMixin,generic.UpdateView):
     def get_queryset(self):
         user = self.request.user
         return Lead.objects.filter(organisation=user.userprofile)
+    def get_success_url(self):
+        return reverse("app:list")
+
+
     def form_valid(self, form):
         form.save()
         messages.info(self.request, "update lead")
         return super(LeadUpdateView,self).form_valid(form)
+
+
 def lead_update(request,pk):
     lead = Lead.objects.get(id=pk)
     form = LeadModelForm(instance=lead)
@@ -230,6 +236,50 @@ class CategoryUpdateView(LoginRequiredMixin,generic.UpdateView):
 
     def get_queryset(self):
         user = self.request.user
+
+        if user.is_organisor:
+            queryset = Lead.objects.filter(organisation=user.userprofile)
+        else:
+            queryset = Lead.objects.filter(organisation=user.agent.organisation)
+            # filter for the agent that is logged in
+            queryset = queryset.filter(agent__user=user)
+        return queryset
+
+        # if user.is_organisor:
+        #     queryset = Category.objects.filter(
+        #         organisation=user.userprofile
+        #     )
+        # else:
+        #     queryset = Category.objects.filter(
+        #         organisation=user.agent.organisation
+        #     )
+        # return queryset
+    def get_success_url(self):
+        return reverse("app:detail",kwargs={"pk":self.get_object().id})
+
+class CategoryCreateView(OrganisorAndLoginMixin,generic.CreateView):
+    template_name = "leads/category_create.html"
+    form_class = CategoryModelForm
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     return Lead.objects.filter(organisation=user.userprofile)
+
+    def get_success_url(self):
+        return reverse("app:category-list")
+
+    def form_valid(self, form):
+        category = form.save(commit=False)
+        category.organisation = self.request.user.userprofile
+        category.save()
+        return super(CategoryCreateView,self).form_valid(form)
+
+class UpdateCategoryView(OrganisorAndLoginMixin,generic.UpdateView):
+    template_name = "leads/category_update.html"
+    form_class = CategoryModelForm
+
+    def get_queryset(self):
+        user = self.request.user
         if user.is_organisor:
             queryset = Category.objects.filter(
                 organisation=user.userprofile
@@ -239,5 +289,9 @@ class CategoryUpdateView(LoginRequiredMixin,generic.UpdateView):
                 organisation=user.agent.organisation
             )
         return queryset
+
     def get_success_url(self):
-        return reverse("app:detail",kwargs={"pk":self.get_object().id})
+        return reverse("app:category-list")
+
+
+

@@ -13,15 +13,21 @@ class LeadModelForm(forms.ModelForm):
             "last_name",
             "age",
             "agent",
+            "category",
             "description",
             "phone_number",
             "email",
+            "profile_picture",
         )
 
     def clean_first_name(self):
         data = self.cleaned_data['first_name']
 
         return data
+
+
+    def clean(self):
+        pass
 
 
 class LeadForm(forms.Form):
@@ -49,4 +55,12 @@ class LeadCategoryUpdateForm(forms.ModelForm):
         model = Lead
         fields = (
             'category',
+        )
+
+
+class CategoryModelForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = (
+            'name',
         )
