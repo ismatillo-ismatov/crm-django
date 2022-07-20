@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm,UsernameField
 from django.contrib.auth import get_user_model
 from django import forms
-from .models import Lead, Agent, Category
+from .models import Lead, Agent, Category, FollowUp
 
 User = get_user_model()
 
@@ -63,4 +63,13 @@ class CategoryModelForm(forms.ModelForm):
         model = Category
         fields = (
             'name',
+        )
+
+
+class FollowForm(forms.ModelForm):
+    class Meta:
+        model = FollowUp
+        fields = (
+            "notes",
+            "file"
         )

@@ -7,6 +7,7 @@ from .forms import AgentModelForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .mixins import OrganisorAndLoginMixin
 import random
+from django.contrib import messages
 class AgentListView(OrganisorAndLoginMixin,generic.ListView):
     template_name = "agents/agent_list.html"
 #
@@ -58,6 +59,11 @@ class AgentUpdateView(OrganisorAndLoginMixin,generic.UpdateView):
     def get_queryset(self):
         organisation = self.request.user.userprofile
         return Agent.objects.filter(organisation=organisation)
+    def form_valid(self, form):
+        form.save()
+        messages.info(self.request, "update lead")
+        return super(AgentUpdateView,self).form_valid(form)
+
 
     def get_success_url(self):
         return reverse("agents:agent-list")

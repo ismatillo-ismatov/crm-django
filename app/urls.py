@@ -15,5 +15,8 @@ urlpatterns = [
     path("category-detail/<int:pk>/",CategoryDetailView.as_view(),name="category-detail"),
     path("category/<int:pk>/update",CategoryUpdateView.as_view(),name="lead_category-update"),
     path("create-category",CategoryCreateView.as_view(),name="category-create"),
-    path("category-update/<int:pk>",UpdateCategoryView.as_view(),name="category_update")
+    path("category-update/<int:pk>",UpdateCategoryView.as_view(),name="category_update"),
+    path("<int:pk>/followup/create",FollowUpCreateView.as_view(),name="lead-followup-create"),
+    path('followups/<int:pk>/', FollowUpUpdateView.as_view(), name='lead-followup-update'),
+    path('followups/<int:pk>/', FollowUpDeleteView.as_view(), name='lead-followup-delete'),
 ]

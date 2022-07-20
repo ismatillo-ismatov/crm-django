@@ -1,0 +1,9 @@
+				 	Array
+
+var object = {ism:'Azamat'};
+var array = ["Ismatillo", {as:15}, 16];
+var  arraymi = Array.isArray(array);
+var javob = arraymi instanceof Array; 
+var javob = array.constructor === Array;
+var x = "sdae"
+console.log(arraymi);
