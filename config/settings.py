@@ -5,7 +5,7 @@ import os
 
 env = environ.Env(
     DEBUG=(bool, False)
-)
+    )
 
 READ_DOT_ENV_FILE = env.bool('READ_DOT_ENV_FILE', default=True)
 if READ_DOT_ENV_FILE:
@@ -20,7 +20,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
 
 
 
