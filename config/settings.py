@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-ALLOWED_HOSTS = ['stark-stream-86619.herokuapp.com/','localhost:8000/']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -79,29 +79,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 
+
+
+
 DATABASES = {
-
     'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': env("DATABASE_NAME"),
-
-        'USER': env('DATABASE_USER'),
-
-        'PASSWORD': env('DATABASE_PASS'),
-
-        'HOST': env('DATABASE_HOST',default='localhost'),
-
-        'PORT': env('DATABASE_PORT'),
-
-
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-
 }
-
-
-
 
 
 # Password validation
