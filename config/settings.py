@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['mysterious-river-53222.herokuapp.com']
 
 
 # Application definition
