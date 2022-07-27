@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 
-ALLOWED_HOSTS = ['mysterious-river-53222.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -83,10 +83,24 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': env("DATABASE_NAME"),
+
+        'USER': env('DATABASE_USER'),
+
+        'PASSWORD': env('DATABASE_PASS'),
+
+        'HOST': env('DATABASE_HOST'),
+
+        'PORT': env('DATABASE_PORT'),
+
+
     }
+
 }
 
 
