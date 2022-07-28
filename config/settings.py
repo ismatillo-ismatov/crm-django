@@ -12,7 +12,7 @@ if READ_DOT_ENV_FILE:
     environ.Env.read_env()
 
 DEBUG = env('DEBUG')
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-sgfe&9!srs^r=b807nsy__4(f@j(*em%36txj#ti-2zt-=-=0!'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
