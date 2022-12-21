@@ -22,7 +22,7 @@ class LandingPageView(generic.TemplateView):
     template_name = "landing.html"
 
 
-
+# lead_list
 class LeadListView(LoginRequiredMixin,generic.ListView):
     template_name = "leads/lead_list.html"
     context_object_name = "leads"
@@ -168,6 +168,8 @@ class CategoryListView(LoginRequiredMixin,generic.ListView):
 class CategoryDetailView(LoginRequiredMixin,generic.DetailView):
     template_name = "leads/category_detail.html"
     context_object_name = "category"
+
+
 
 
     def get_queryset(self):

@@ -1,17 +1,11 @@
 import os.path
 from pathlib import Path
-import environ
 import os
 
-env = environ.Env(
-    DEBUG=(bool, False)
-    )
 
-READ_DOT_ENV_FILE = env.bool('READ_DOT_ENV_FILE', default=True)
-if READ_DOT_ENV_FILE:
-    environ.Env.read_env()
 
-DEBUG = env('DEBUG')
+
+DEBUG = True
 SECRET_KEY = 'django-insecure-sgfe&9!srs^r=b807nsy__4(f@j(*em%36txj#ti-2zt-=-=0!'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -142,7 +136,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 AUTH_USER_MODEL = 'app.User'
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-LOGIN_REDIRECT_URL = 'app/'
+LOGIN_REDIRECT_URL = '/app'
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = 'login/'
 
