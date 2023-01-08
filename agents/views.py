@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.core.mail import send_mail
 from django.views import generic
 from django.shortcuts import reverse
+from django.urls import reverse_lazy
 from app.models import Agent,UserProfile
 from .forms import AgentModelForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -55,18 +56,19 @@ class AgentDetailView(OrganisorAndLoginMixin,generic.DetailView):
 class AgentUpdateView(OrganisorAndLoginMixin,generic.UpdateView):
     template_name = "agents/agent_update.html"
     form_class = AgentModelForm
-
-    def get_queryset(self):
-        organisation = self.request.user.userprofile
-        return Agent.objects.filter(organisation=organisation)
-    def form_valid(self, form):
-        form.save()
-        messages.info(self.request, "update lead")
-        return super(AgentUpdateView,self).form_valid(form)
-
-
     def get_success_url(self):
         return reverse("agents:agent-list")
+    def get_queryset(self):
+        user = self.request.user
+        return Agent.objects.filter(organisation=user.userprofile)
+
+
+    # def form_valid(self, form):
+    #     form.save()
+    #     messages.info(self.request, "update agent")
+    #     return super(AgentUpdateView,self).form_valid(form)
+
+
 
 class AgentDeleteView(OrganisorAndLoginMixin,generic.DeleteView):
     template_name = "agents/agent_delete.html"

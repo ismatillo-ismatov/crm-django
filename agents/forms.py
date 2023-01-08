@@ -10,7 +10,18 @@ class AgentModelForm(forms.ModelForm):
         model = User
         fields = (
             'email',
-            "username",
             "first_name",
             "last_name"
         )
+
+#     def clean_first_name(self):
+#         data = self.cleaned_data['first_name']
+#
+#         return data
+#
+#     def clean(self):
+#         pass
+# class AgentForm(forms.Form):
+#
+#     first_name = forms.CharField()
+#     last_name = forms.CharField()
